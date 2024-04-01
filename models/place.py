@@ -40,36 +40,36 @@ class Place(BaseModel, Base):
                            back_populates="place_amenities")
     
     if getenv("HBNB_TYPE_STORAGE") != "db":
-        from models import storage
+       from models import storage
 
-        @property
-        def reviews(self):
-            """getter attribute reviews return a list of
+       @property
+       def reviews(self):
+              """getter attribute reviews return a list of
 
-            reviews within the current place"""
-            review_list = []
-            for review in list(storage.all(Review).values()):
-                if self.id == review.place_id:
-                    review_list.append(review)
-            return review_list
+              reviews within the current place"""
+              review_list = []
+              for review in list(storage.all(Review).values()):
+                     if self.id == review.place_id:
+                            review_list.append(review)
+              return review_list
 
-        @property
-        def amenities(self):
-            """getter attribute amenities that returns the
-            list of Amenity instances based on the attribute
-            amenity_ids that contains all Amenity.id linked
-            to the Place"""
-            amenity_list = []
-            for amenity in list(storage.all(Amenity).values()):
-                if amenity.id in self.amenity_ids:
-                    amenity_list.append(amenity)
-            return amenity_list
+       @property
+       def amenities(self):
+              """getter attribute amenities that returns the
+              list of Amenity instances based on the attribute
+              amenity_ids that contains all Amenity.id linked
+              to the Place"""
+              amenity_list = []
+              for amenity in list(storage.all(Amenity).values()):
+                     if amenity.id in self.amenity_ids:
+                            amenity_list.append(amenity)
+              return amenity_list
 
-        @amenities.setter
-        def amenities(self, value):
-            """setter that adds the Amenity id to the list amenity_ids"""
-            if type(value) is Amenity:
-                self.amenity_ids.append(value.id)
+       @amenities.setter
+       def amenities(self, value):
+              """setter that adds the Amenity id to the list amenity_ids"""
+              if type(value) is Amenity:
+                     self.amenity_ids.append(value.id)
 
     
     
