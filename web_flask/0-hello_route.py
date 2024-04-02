@@ -1,16 +1,17 @@
 #!/usr/bin/python3
-
-"""Flask web application"""
-
+"""
+starts a Flask web application
+"""
 from flask import Flask
 
-skill_app = Flask(__name__)
+app = Flask(__name__)
 
 
-@skill_app.route('/', strict_slashes=False)
+@app.route("/", strict_slashes=False)
 def hello():
-    """Hello HBNB message"""
+    """ Returns Hello HBNB! """
     return "Hello HBNB!"
 
+
 if __name__ == "__main__":
-    skill_app.run(port=5000, host='0.0.0.0')
+    app.run(host="0.0.0.0", port=5000)
