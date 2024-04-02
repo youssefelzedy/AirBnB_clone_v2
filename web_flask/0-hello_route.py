@@ -6,6 +6,7 @@ from flask import Flask
 
 skill_app = Flask(__name__)
 
+
 @skill_app.route('/', strict_slashes=False)
 def hello():
     """Hello HBNB message"""
