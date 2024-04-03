@@ -35,8 +35,7 @@ def python(text="is cool"):
 @skill_app.route('/number/<int:n>', strict_slashes=False)
 def number(n):
     """number integer message"""
-    if n.isdigit():
-        return "{} is a number".format(n)
+    return "{} is a number".format(n)
 
 
 if __name__ == "__main__":
