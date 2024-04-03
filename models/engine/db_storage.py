@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from os import getenv
 from models.base_model import BaseModel, Base
 
+
 class DBStorage:
     """This class manages storage of hbnb models in the DataBase
 
