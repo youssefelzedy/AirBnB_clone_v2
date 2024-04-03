@@ -16,7 +16,7 @@ def hello():
 @skill_app.route('/hbnb', strict_slashes=False)
 def hbnb():
     """HBNB message"""
-    return "HBNB!"
+    return "HBNB"
 
 
 @skill_app.route('/c/<text>', strict_slashes=False)
