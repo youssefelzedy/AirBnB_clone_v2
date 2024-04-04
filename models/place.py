@@ -7,17 +7,14 @@ from models.review import Review
 from models.amenity import Amenity
 from os import getenv
 
-association_table = Table("place_amenity", Base.metadata,
-                          Column("place_id",
-                                 String(60),
-                                 ForeignKey("places.id"),
-                                 primary_key=True,
-                                 nullable=False),
-                          Column("amenity_id",
-                                 String(60),
-                                 ForeignKey("amenities.id"),
-                                 primary_key=True,
-                                 nullable=False))
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False),
+                      )
 
 
 class Place(BaseModel, Base):
@@ -34,24 +31,30 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
 
-    reviews = relationship("Review", backref="place", cascade="delete")
-    amenities = relationship("Amenity", secondary="place_amenity",
-                             back_populates="place_amenities", viewonly=False)
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        reviews = relationship(
+            'Review', cascade='all, delete', backref='place')
+        amenities = relationship(
+            'Amenity', secondary=place_amenity, viewonly=False,
+            backref='place_amenity')
 
-
-    if getenv("HBNB_TYPE_STORAGE") != "db":
-        from models import storage
-
+    else:
         @property
         def reviews(self):
             """getter attribute reviews return a list of
 
             reviews within the current place"""
+            
+            from models import storage
+            from models.review import Review
+        
             review_list = []
             for review in list(storage.all(Review).values()):
                 if self.id == review.place_id:
                     review_list.append(review)
             return review_list
+
+
 
         @property
         def amenities(self):

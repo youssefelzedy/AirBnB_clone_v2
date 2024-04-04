@@ -13,12 +13,12 @@ app = Flask(__name__)
 def states_lists(n):
     """number integer message"""
     states = storage.all(State)
-
-    return render_template('7-states_list.html', states=states.values())
+    states_list = list(states.values())
+    return render_template('7-states_list.html', states=states_list)
 
 
 @app.teardown_appcontext
-def close_session(exc):
+def close_session(exception):
     """Close session"""
     storage.close()
 

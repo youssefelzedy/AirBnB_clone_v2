@@ -3,7 +3,14 @@
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 from os import getenv
-from models.base_model import BaseModel, Base
+from models.base_model import BaseModel
+from models.user import User
+from models.amenity import Amenity
+from models.base_model import Base
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
 
 
 class DBStorage:
@@ -18,13 +25,6 @@ class DBStorage:
 
     def __init__(self):
         """Initialize a new DBStorage instance"""
-        from models.amenity import Amenity
-        from models.city import City
-        from models.place import Place
-        from models.review import Review
-        from models.state import State
-        from models.user import User
-
         DBStorage.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
                                            format(getenv("HBNB_MYSQL_USER"),
                                                   getenv("HBNB_MYSQL_PWD"),
@@ -35,26 +35,39 @@ class DBStorage:
         if getenv("HBNB_ENV") == "test":
             Base.metadata.drop_all(self.__engine)
 
+
     def all(self, cls=None):
-        results = {}
-        from models.amenity import Amenity
-        from models.city import City
-        from models.place import Place
-        from models.review import Review
-        from models.state import State
-        from models.user import User
+        '''
+        query for all objects on the current database session
+        '''
+        classes = {
+            "City": City,
+            "State": State,
+            "User": User,
+            "Place": Place,
+            "Review": Review,
+            "Amenity": Amenity,
+        }
+        result = {}
+        query_rows = []
 
-        if cls is None:
-            classes = [Amenity, City, Place, Review, State, User]
+        if cls:
+            '''Query for all objects belonging to cls'''
+            if type(cls) is str:
+                cls = eval(cls)
+            query_rows = self.__session.query(cls)
+            for obj in query_rows:
+                key = '{}.{}'.format(type(obj).__name__, obj.id)
+                result[key] = obj
+            return result
         else:
-            classes = [cls]
-
-        for class_obj in classes:
-            objects = self.__session.query(class_obj).all()
-            for obj in objects:
-                results['{}.{}'.
-                        format(obj.to_dict()['__class__'], obj.id)] = obj
-        return results
+            '''Query for all types of objects'''
+            for name, value in classes.items():
+                query_rows = self.__session.query(value)
+                for obj in query_rows:
+                    key = '{}.{}'.format(name, obj.id)
+                    result[key] = obj
+            return result
 
     def new(self, obj):
         """ """
