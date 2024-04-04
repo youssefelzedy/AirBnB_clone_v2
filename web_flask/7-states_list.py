@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 
 @app.route('/states_list', strict_slashes=False)
-def states_lists(n):
+def states_lists():
     """number integer message"""
     states = storage.all(State)
     states_list = list(states.values())

@@ -62,6 +62,10 @@ class Place(BaseModel, Base):
             list of Amenity instances based on the attribute
             amenity_ids that contains all Amenity.id linked
             to the Place"""
+            
+            from models import storage
+            from models.review import Review
+
             amenity_list = []
             for amenity in list(storage.all(Amenity).values()):
                 if amenity.id in self.amenity_ids:
