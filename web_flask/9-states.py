@@ -10,7 +10,7 @@ from models.state import State
 app = Flask(__name__)
 
 
-@app.route("/states", strict_slashes=False)
+@app.route("pi", strict_slashes=False)
 @app.route("/states/<id>", strict_slashes=False)
 def show_states_and_cities(id=None):
     """ Displays all states"""
